@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk configs.compileSdk
+
+    defaultConfig {
+        minSdk configs.minSdk
+        targetSdk configs.targetSdk
+        versionCode configs.versionCode
+        versionName configs.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'consumer-rules.pro'
+        }
+
+
+
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    // 打包源码jar
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        archiveClassifier = 'sources'
+    }
+
+
+}
+
+
+
+dependencies {
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    compileOnly deps.appcompat
+    compileOnly deps.constraintlayout
+    testImplementation deps.junit
+    androidTestImplementation deps.ext_junit
+    androidTestImplementation deps.espresso_core
+
+}
+
