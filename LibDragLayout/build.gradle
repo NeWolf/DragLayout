@@ -70,7 +70,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.NeWolf'
                 artifactId = 'com.newolf.widgets'
-                version = '1.0'
+                version = 'V'+configs.versionName
             }
         }
     }

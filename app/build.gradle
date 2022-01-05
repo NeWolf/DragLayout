@@ -34,13 +34,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.aar"])
+//    implementation fileTree(dir: "libs", include: ["*.aar"])
     implementation deps.coreKtx
     implementation deps.appcompat
     implementation deps.material
     implementation deps.constraintlayout
 //    implementation project(path: ':LibDragLayout')
-//    implementation 'com.github.NeWolf:DragLayout:master-SNAPSHOT'
+    implementation 'com.github.NeWolf:DragLayout:master-SNAPSHOT'
     testImplementation deps.junit
     androidTestImplementation deps.ext_junit
     androidTestImplementation deps.espresso_core
