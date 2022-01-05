@@ -40,6 +40,7 @@ dependencies {
     implementation deps.material
     implementation deps.constraintlayout
     implementation project(path: ':LibDragLayout')
+//    implementation 'com.github.NeWolf:DragLayout:-SNAPSHOT'
     testImplementation deps.junit
     androidTestImplementation deps.ext_junit
     androidTestImplementation deps.espresso_core

@@ -2,6 +2,7 @@ package com.newolf.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -28,8 +29,9 @@ class DragLayout @JvmOverloads constructor(
     private val mViewDragHelper: ViewDragHelper =
         ViewDragHelper.create(this, object : ViewDragHelper.Callback() {
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-                log("tryCaptureView : child = $child , pointerId = $pointerId")
-                return true
+                val layoutParams = child.layoutParams as DragLayoutLayoutParam
+                log("tryCaptureView : child = $child , pointerId = $pointerId , isCanDrag = ${layoutParams.isCanDrag}")
+                return layoutParams.isCanDrag
             }
 
             override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
@@ -59,7 +61,7 @@ class DragLayout @JvmOverloads constructor(
 
             override fun onViewReleased(releasedChild: View, xVelocity: Float, yVelocity: Float) {
                 super.onViewReleased(releasedChild, xVelocity, yVelocity)
-                if (!isAutoAttachEdge){
+                if (!isAutoAttachEdge) {
                     return
                 }
                 log("onViewReleased : xVelocity=$xVelocity; yVelocity=$yVelocity")
@@ -93,6 +95,11 @@ class DragLayout @JvmOverloads constructor(
         }
     }
 
+    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
+       log("generateLayoutParams attrs")
+        return DragLayoutLayoutParam(context, attrs)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mViewDragHelper.processTouchEvent(event)
@@ -116,7 +123,18 @@ class DragLayout @JvmOverloads constructor(
 
     private fun log(msg: String) {
         if (isLogEnable) {
-//            Log.d(TAG, msg)
+            Log.d(TAG, msg)
+        }
+    }
+
+    @SuppressLint("CustomViewStyleable")
+    class DragLayoutLayoutParam(context: Context, attrs: AttributeSet?) :
+        LayoutParams(context, attrs) {
+        var isCanDrag = true
+        init {
+            val a: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.DragLayout)
+            isCanDrag = a.getBoolean(R.styleable.DragLayout_is_can_drag, true)
+            a.recycle()
         }
     }
 }
