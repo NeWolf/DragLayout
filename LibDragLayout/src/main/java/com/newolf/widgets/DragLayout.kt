@@ -17,7 +17,7 @@ class DragLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
     companion object {
-        private const val TAG = "DragLayout"
+        private const val TAG = "Wolf.DragLayout"
     }
 
     private var isLogEnable = false
@@ -61,10 +61,11 @@ class DragLayout @JvmOverloads constructor(
 
             override fun onViewReleased(releasedChild: View, xVelocity: Float, yVelocity: Float) {
                 super.onViewReleased(releasedChild, xVelocity, yVelocity)
-                if (!isAutoAttachEdge) {
+                val layoutParams = releasedChild.layoutParams as DragLayoutLayoutParam
+                log("onViewReleased : xVelocity=$xVelocity; yVelocity=$yVelocity , isAutoAttachEdge = $isAutoAttachEdge , layoutParams.isAutoAttachEdge = ${layoutParams.isAutoAttachEdge}")
+                if (!isAutoAttachEdge || !layoutParams.isAutoAttachEdge) {
                     return
                 }
-                log("onViewReleased : xVelocity=$xVelocity; yVelocity=$yVelocity")
                 val childWidth = releasedChild.width
                 val parentWidth = width
                 val leftBound = paddingLeft // 左边缘
@@ -131,9 +132,11 @@ class DragLayout @JvmOverloads constructor(
     class DragLayoutLayoutParam(context: Context, attrs: AttributeSet?) :
         LayoutParams(context, attrs) {
         var isCanDrag = true
+        var isAutoAttachEdge = true
         init {
             val a: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.DragLayout)
             isCanDrag = a.getBoolean(R.styleable.DragLayout_is_can_drag, true)
+            isAutoAttachEdge = a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, true)
             a.recycle()
         }
     }

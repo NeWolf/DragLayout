@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="DragLayout">
         <attr name="is_can_drag" format="boolean"/>
+        <attr name="is_auto_attach_edge" format="boolean"/>
     </declare-styleable>
 
 </resources>
