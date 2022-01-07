@@ -35,6 +35,6 @@
 
 
 -keep class com.newolf.widgets.DragLayout{
-    public <fields>;
+    public <fields> ;
     public <methods>;
 }
