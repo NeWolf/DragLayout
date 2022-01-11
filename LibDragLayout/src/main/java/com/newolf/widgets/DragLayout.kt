@@ -151,9 +151,9 @@ class DragLayout @JvmOverloads constructor(
             isCanDrag = a.getBoolean(R.styleable.DragLayout_is_can_drag, true)
             isAutoAttachEdge = a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, true)
             isVerticalScrollPriority =
-                a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, false)
+                a.getBoolean(R.styleable.DragLayout_is_vertical_scroll_priority, false)
             isHorizontalScrollPriority =
-                a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, false)
+                a.getBoolean(R.styleable.DragLayout_is_horizontal_scroll_priority, false)
             Log.d(TAG,
                 "isCanDrag = $isCanDrag , " +
                         "isAutoAttachEdge = $isAutoAttachEdge ," +
