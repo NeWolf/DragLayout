@@ -3,6 +3,8 @@
     <declare-styleable name="DragLayout">
         <attr name="is_can_drag" format="boolean"/>
         <attr name="is_auto_attach_edge" format="boolean"/>
+        <attr name="is_vertical_scroll_priority" format="boolean"/>
+        <attr name="is_horizontal_scroll_priority" format="boolean"/>
     </declare-styleable>
 
 </resources>

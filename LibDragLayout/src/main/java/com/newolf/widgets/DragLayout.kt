@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.customview.widget.ViewDragHelper
+import kotlin.math.log
 
 
 class DragLayout @JvmOverloads constructor(
@@ -29,7 +30,11 @@ class DragLayout @JvmOverloads constructor(
     private val mViewDragHelper: ViewDragHelper =
         ViewDragHelper.create(this, object : ViewDragHelper.Callback() {
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-                val layoutParams = child.layoutParams as DragLayoutLayoutParam
+                log("tryCaptureView : child = $child , pointerId = $pointerId")
+                val layoutParams = child.layoutParams
+                if (layoutParams !is DragLayoutLayoutParam) {
+                    return false
+                }
                 log("tryCaptureView : child = $child , pointerId = $pointerId , isCanDrag = ${layoutParams.isCanDrag}")
                 return layoutParams.isCanDrag
             }
@@ -51,12 +56,17 @@ class DragLayout @JvmOverloads constructor(
 
             override fun getViewHorizontalDragRange(child: View): Int {
                 log("getViewHorizontalDragRange : child = $child")
-                return measuredWidth - child.measuredWidth
+                if (child.layoutParams !is DragLayoutLayoutParam) {
+                    return measuredWidth - child.measuredWidth
+                }
+                return if ((child.layoutParams as DragLayoutLayoutParam).isHorizontalScrollPriority) 0 else measuredWidth - child.measuredWidth
             }
 
             override fun getViewVerticalDragRange(child: View): Int {
-                log("getViewVerticalDragRange : child = $child")
-                return measuredHeight - child.measuredHeight
+                if (child.layoutParams !is DragLayoutLayoutParam) {
+                    return measuredHeight - child.measuredHeight
+                }
+                return if ((child.layoutParams as DragLayoutLayoutParam).isVerticalScrollPriority) 0 else measuredWidth - child.measuredWidth
             }
 
             override fun onViewReleased(releasedChild: View, xVelocity: Float, yVelocity: Float) {
@@ -97,7 +107,7 @@ class DragLayout @JvmOverloads constructor(
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
-       log("generateLayoutParams attrs")
+        log("generateLayoutParams attrs")
         return DragLayoutLayoutParam(context, attrs)
     }
 
@@ -133,10 +143,22 @@ class DragLayout @JvmOverloads constructor(
         LayoutParams(context, attrs) {
         var isCanDrag = true
         var isAutoAttachEdge = true
+        var isVerticalScrollPriority = false
+        var isHorizontalScrollPriority = false
+
         init {
             val a: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.DragLayout)
             isCanDrag = a.getBoolean(R.styleable.DragLayout_is_can_drag, true)
             isAutoAttachEdge = a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, true)
+            isVerticalScrollPriority =
+                a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, false)
+            isHorizontalScrollPriority =
+                a.getBoolean(R.styleable.DragLayout_is_auto_attach_edge, false)
+            Log.d(TAG,
+                "isCanDrag = $isCanDrag , " +
+                        "isAutoAttachEdge = $isAutoAttachEdge ," +
+                        "isVerticalScrollPriority = $isVerticalScrollPriority ," +
+                        "isHorizontalScrollPriority = $isHorizontalScrollPriority ")
             a.recycle()
         }
     }
