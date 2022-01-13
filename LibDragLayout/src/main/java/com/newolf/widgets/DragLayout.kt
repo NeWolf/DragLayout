@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.customview.widget.ViewDragHelper
-import kotlin.math.log
 
 
 class DragLayout @JvmOverloads constructor(
@@ -21,10 +20,13 @@ class DragLayout @JvmOverloads constructor(
         private const val TAG = "Wolf.DragLayout"
     }
 
-    private var isLogEnable = false
+    data class LT(val left: Int, val top: Int)
+
+    private var isLogEnable = true
     private var mCurrentLeft = 0
     private var mCurrentTop = 0
     private var isAutoAttachEdge = true
+    private val changedSet = HashMap<View, LT>()
 
 
     private val mViewDragHelper: ViewDragHelper =
@@ -82,11 +84,25 @@ class DragLayout @JvmOverloads constructor(
                 val rightBound = width - releasedChild.width - paddingRight // 右边缘
                 // 方块的中点超过 ViewGroup 的中点时，滑动到左边缘，否则滑动到右边缘
                 if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
+                    (releasedChild.layoutParams as DragLayoutLayoutParam).leftMargin = leftBound
                     settleCapturedViewAt(leftBound, mCurrentTop)
                 } else {
+                    (releasedChild.layoutParams as DragLayoutLayoutParam).topMargin = leftBound
                     settleCapturedViewAt(rightBound, mCurrentTop)
                 }
                 invalidate()
+            }
+
+            override fun onViewPositionChanged(
+                changedView: View,
+                left: Int,
+                top: Int,
+                dx: Int,
+                dy: Int,
+            ) {
+                super.onViewPositionChanged(changedView, left, top, dx, dy)
+                log("onViewPositionChanged :  changedView = $changedView ,left = $left ,top = $top ,dx = $dx ,dy = $dy ")
+                changedSet[changedView] = LT(left, top)
             }
 
         })
@@ -160,6 +176,21 @@ class DragLayout @JvmOverloads constructor(
                         "isVerticalScrollPriority = $isVerticalScrollPriority ," +
                         "isHorizontalScrollPriority = $isHorizontalScrollPriority ")
             a.recycle()
+        }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+//        log("onLayout ： changed = $changed left = $left top = $top right = $right bottom = $bottom")
+        super.onLayout(changed, left, top, right, bottom)
+        val count = childCount
+        for (index in 0 until count) {
+            val child = getChildAt(index)
+            if (changedSet.containsKey(child)) {
+                val lt = changedSet[child]
+                if (lt != null) {
+                    child.layout(lt.left, lt.top, lt.left + child.width, lt.top + child.height)
+                }
+            }
         }
     }
 }
