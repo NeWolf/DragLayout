@@ -22,7 +22,7 @@ class DragLayout @JvmOverloads constructor(
 
     data class LT(val left: Int, val top: Int)
 
-    private var isLogEnable = true
+    private var isLogEnable = false
     private var mCurrentLeft = 0
     private var mCurrentTop = 0
     private var isAutoAttachEdge = true
@@ -37,8 +37,9 @@ class DragLayout @JvmOverloads constructor(
                 if (layoutParams !is DragLayoutLayoutParam) {
                     return false
                 }
-                log("tryCaptureView : child = $child , pointerId = $pointerId , isCanDrag = ${layoutParams.isCanDrag}")
-                return layoutParams.isCanDrag
+                val b = layoutParams.isCanDrag && child.visibility == View.VISIBLE
+                log("tryCaptureView : child = $child ,result = $b, pointerId = $pointerId , isCanDrag = ${layoutParams.isCanDrag} ,visibility= ${child.visibility}")
+                return b
             }
 
             override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
