@@ -69,10 +69,32 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.NeWolf'
-                artifactId = 'com.newolf.widgets'
+                artifactId = 'DragLayout'
                 version = 'V'+configs.versionName
             }
+
+//            distributionManagement {
+//                relocation {
+//                    // New artifact coordinates
+//                    groupId = "com.github.NeWolf"
+//                    artifactId = "DragLayout"
+//                    version = 'V'+configs.versionName
+//                    message = "groupId has been changed"
+//                }
+//            }
         }
     }
+//    repositories {
+//        maven {
+//            // change URLs to point to your repos, e.g. http://my.org/repo
+////            def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+////            def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+////            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//            url = MAVEN_REPO_RELEASE_URL
+//        }
+//    }
+
+
+
 }
 

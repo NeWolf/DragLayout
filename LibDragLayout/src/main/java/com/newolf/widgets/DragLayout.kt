@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.customview.widget.ViewDragHelper
 
@@ -148,6 +149,17 @@ class DragLayout @JvmOverloads constructor(
         return this
     }
 
+    fun layoutChild(@IdRes id: Int, left: Int, top: Int) {
+        val view = findViewById<View>(id)
+        log("layoutChild: view = $view , left = $left , top = $top")
+        if (view != null) {
+//            changedSet[view] = LT(left, top)
+            mViewDragHelper.smoothSlideViewTo(view, left, top)
+//            view.layout(left, top, left + view.width, top + view.height)
+            requestLayout()
+        }
+    }
+
 
     private fun log(msg: String) {
         if (isLogEnable) {
@@ -171,11 +183,13 @@ class DragLayout @JvmOverloads constructor(
                 a.getBoolean(R.styleable.DragLayout_is_vertical_scroll_priority, false)
             isHorizontalScrollPriority =
                 a.getBoolean(R.styleable.DragLayout_is_horizontal_scroll_priority, false)
-            Log.d(TAG,
+            Log.d(
+                TAG,
                 "isCanDrag = $isCanDrag , " +
                         "isAutoAttachEdge = $isAutoAttachEdge ," +
                         "isVerticalScrollPriority = $isVerticalScrollPriority ," +
-                        "isHorizontalScrollPriority = $isHorizontalScrollPriority ")
+                        "isHorizontalScrollPriority = $isHorizontalScrollPriority "
+            )
             a.recycle()
         }
     }
@@ -194,4 +208,6 @@ class DragLayout @JvmOverloads constructor(
             }
         }
     }
+
+
 }

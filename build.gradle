@@ -9,8 +9,8 @@ buildscript {
 //                   buildToolsVersion: '30.0.3',
                    minSdk           : 16,
                    targetSdk        : 31,
-                   versionCode      : 260,
-                   versionName      : '2.6.0',
+                   versionCode      : 300,
+                   versionName      : '3.0.0',
 
 
         ]
@@ -45,7 +45,8 @@ buildscript {
         maven{url'https://maven.aliyun.com/repository/gradle-plugin'}
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven { url 'http://127.0.0.1:8081/repository/maven-public' }
+//        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.3"
