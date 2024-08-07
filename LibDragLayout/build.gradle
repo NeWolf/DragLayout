@@ -7,7 +7,7 @@ group = 'com.github.jitpack'
 version = '1.0'
 android {
     compileSdk configs.compileSdk
-
+    compileSdkVersion 26
     defaultConfig {
         minSdk configs.minSdk
         targetSdk configs.targetSdk
@@ -54,11 +54,12 @@ android {
 dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    compileOnly deps.appcompat
-    compileOnly deps.constraintlayout
-    testImplementation deps.junit
-    androidTestImplementation deps.ext_junit
-    androidTestImplementation deps.espresso_core
+//    compileOnly deps.appcompat
+    compileOnly 'com.android.support:appcompat-v7:26.0.0'
+//    compileOnly deps.constraintlayout
+//    testImplementation deps.junit
+//    androidTestImplementation deps.ext_junit
+//    androidTestImplementation deps.espresso_core
 
 }
 

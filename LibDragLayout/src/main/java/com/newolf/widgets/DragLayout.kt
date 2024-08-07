@@ -3,20 +3,20 @@ package com.newolf.widgets
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
+import android.support.annotation.IdRes
+import android.support.v4.widget.ViewDragHelper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.IdRes
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.customview.widget.ViewDragHelper
+import android.widget.FrameLayout
 
 
 class DragLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
     companion object {
         private const val TAG = "Wolf.DragLayout"
     }
@@ -59,7 +59,11 @@ class DragLayout @JvmOverloads constructor(
             }
 
             override fun getViewHorizontalDragRange(child: View): Int {
-                log("getViewHorizontalDragRange : child = $child")
+                log("getViewHorizontalDragRange : child = $child ,visibility  ${child.visibility == View.VISIBLE }")
+                if (child.visibility !=View.VISIBLE){
+                    return 0
+                }
+
                 if (child.layoutParams !is DragLayoutLayoutParam) {
                     return measuredWidth - child.measuredWidth
                 }
@@ -67,6 +71,9 @@ class DragLayout @JvmOverloads constructor(
             }
 
             override fun getViewVerticalDragRange(child: View): Int {
+                if (child.visibility !=View.VISIBLE){
+                    return 0
+                }
                 if (child.layoutParams !is DragLayoutLayoutParam) {
                     return measuredHeight - child.measuredHeight
                 }
@@ -132,7 +139,7 @@ class DragLayout @JvmOverloads constructor(
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mViewDragHelper.processTouchEvent(event)
-        return true
+        return mViewDragHelper.isCapturedViewUnder(event.x.toInt(),event.y.toInt())
     }
 
     fun setIsAutoAttachEdge(isAuto: Boolean): DragLayout {
