@@ -38,3 +38,6 @@
     public <fields> ;
     public <methods>;
 }
+-keep class com.newolf.widgets.BuildConfig{
+    public <fields> ;
+}
